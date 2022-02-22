@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Name</title>
+    <script>
+        function assert(value, comment) {
+            var li = document.createElement('li');
+            li.className = value ? "pass" : "fail";
+            li.appendChild(document.createTextNode(comment));
+            document.getElementById("results").appendChild(li);
+        }
+        function isNimble() { return true; }
+        var canFly = function() { return true; };
+        window.isDeadly = function(){ return true; }
+        window.onload = function() {
+            assert(typeof window.isNimble === "function",
+            "isNimble() defined");
+            assert(isNimble.name === "isNimble", "isNimble() has a name")
+            assert(typeof window.canFly === "function", "canFly() defined")
+            assert(canFly.name === "", "canFly() has no name")
+            assert(typeof window.isDeadly === "function", "inner() in scope before delcaration")
+            function outer() {
+                assert(typeof inner === "function", "inner() in scope before declaration");
+                function inner(){}
+                assert(typeof inner === "function", "inner() in scope after declaration")
+                assert(window.inner === undefined, "inner() not in global scope")
+    
+            }
+            outer();
+            assert(window.inner === undefined, "inner() still not in global scope")
+            window.wieldsSword = function swingsSword() { return true; }
+            assert(window.wieldsSword.name === 'swingsSword', "wieldSword's real name is swingsSword")
+            
+
+        };
+    </script>
+    <style>
+        #results li.pass {
+            color: green;
+        }
+        #results li.fail {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <ul id="results"></ul>
+</body>
+</html>
