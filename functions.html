@@ -65,6 +65,13 @@
             return isPrime.answers[value] = prime;
         }
 
+        //memoizing DOM element
+        function getElements(name) {
+            if (!getElements.cache) getElements.cache = {};
+            return getElements.cache[name] = getElements.cache[name] || 
+            document.getElementsByTagName(name);
+        }
+
         window.onload= function() {
             assert(isPrime(5), "5 is prime");
             assert(isPrime.answers[5], "answer was cached");
