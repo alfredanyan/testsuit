@@ -12,8 +12,55 @@
             li.appendChild(document.createTextNode(comment))
             document.getElementById("results").appendChild(li);
         }
+        function isPalindrome(text) {
+            if (text.length <= 1) return true;
+            if (text.charAt(0) != text.charAt(text.length - 1)) return false;
+            return isPalindrome(text.substr(1, text.length - 2));
+        }
+        function chirp(n) {
+            return n > 1 ? chirp(n-1) + "-chirp" : "chirp";
+        }
+        var ninja1 = {
+            ninjaChirp: function signal(n) {
+                return n > 1 ? signal(n-1) + "-chirp" : "chirp";
+            }
+        };
+
+        var samurai = {
+            ninjaChirp: ninja1.ninjaChirp
+        }
+
+        var ninja4 = {
+            chirp: function(n) {
+                return n >1 ? arguments.callee(n-1) + "-chirp" : "chirp";
+            }
+        }
+
+        var storeUniqueIdFunctions = {
+            nextId: 1,
+            cache: {},
+            add: function(fn) {
+                if (!fn.id) {
+                    fn.id = store.nextId++;
+                    return !!(store.cache[fn.id] = fn);
+                }
+            }
+        };
+        function uniqueNinja(){}
+
         window.onload= function() {
-            assert(true, 'power!')
+            assert(storeUniqueIdFunctions.add(uniqueNinja), "safely add function");
+            assert(!storeUniqueIdFunctions.add(uniqueNinja), "already added");
+            assert(ninja4.chirp(3) == "chirp-chirp-chirp", "arguments.callee is the function itself");
+            var ninja3 = function myNinja() {
+                assert(ninja3 == myNinja, "two in one name")
+            }
+            ninja3();
+            assert(typeof myNinja == "undefined", "outside scope of inline function");
+            assert(samurai.ninjaChirp(3) == "chirp-chirp-chirp", "samurai chirp");
+            assert(ninja1.ninjaChirp(3) == "chirp-chirp-chirp", "ninja chirping");
+            assert(chirp(3) == "chirp-chirp-chirp", "calling the named function");
+            assert(true, 'power!');
              var ninja = {
                 shout: function() {
                     assert(true, "Ninja")
