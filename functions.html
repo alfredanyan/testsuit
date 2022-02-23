@@ -36,19 +36,38 @@
             }
         }
 
+        //storing unique functions in collection
         var storeUniqueIdFunctions = {
             nextId: 1,
             cache: {},
             add: function(fn) {
                 if (!fn.id) {
-                    fn.id = store.nextId++;
-                    return !!(store.cache[fn.id] = fn);
+                    fn.id = storeUniqueIdFunctions.nextId++;
+                    return !!(storeUniqueIdFunctions.cache[fn.id] = fn);
                 }
             }
         };
         function uniqueNinja(){}
 
+        //memoizing previously computed values
+        function isPrime(value) {
+            if (!isPrime.answers) isPrime.answers = {};
+            if (isPrime.answers[value] != null) {
+                return isPrime.answers[value];
+            }
+            var prime = value != 1; //1 can never be prime
+            for (var i = 2; i < value; i++) {
+                if ( value %i == 0) {
+                    prime = false;
+                    break;
+                }
+            }
+            return isPrime.answers[value] = prime;
+        }
+
         window.onload= function() {
+            assert(isPrime(5), "5 is prime");
+            assert(isPrime.answers[5], "answer was cached");
             assert(storeUniqueIdFunctions.add(uniqueNinja), "safely add function");
             assert(!storeUniqueIdFunctions.add(uniqueNinja), "already added");
             assert(ninja4.chirp(3) == "chirp-chirp-chirp", "arguments.callee is the function itself");
