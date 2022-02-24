@@ -72,7 +72,32 @@
             document.getElementsByTagName(name);
         }
 
+        //simulating array like methods
+        var elements = {
+            length: 0,
+            add: function(element) {
+                Array.prototype.push.call(this, element);
+            },
+            gather: function(id) {
+                this.add(document.getElementById(id));
+            }
+        };
+
+        //using apply
+        function smallest(array) {
+            return Math.min.apply(Math, array);
+        }
+        function largest(array) {
+            return Math.min.apply(Math, array);
+        }
+
+        
         window.onload= function() {
+            
+            elements.gather("first");
+            assert(elements.length == 1 && elements[0].nodeType, "verify that we have an element in our stash");
+            elements.gather("second");
+            assert(elements.length == 2 && elements[1].nodeType, "verfy other insertion");
             assert(isPrime(5), "5 is prime");
             assert(isPrime.answers[5], "answer was cached");
             assert(storeUniqueIdFunctions.add(uniqueNinja), "safely add function");
@@ -114,5 +139,8 @@
 </head>
 <body>
     <ul id="results" ></ul>
+    <ul id="first" ></ul>
+    <ul id="second" ></ul>
+    
 </body>
 </html>+
