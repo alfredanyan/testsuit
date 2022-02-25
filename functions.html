@@ -91,8 +91,19 @@
             return Math.max.apply(Math, array);
         }
 
+        function merge(root) {
+            for (var i = 1; i < arguments.length; i++) {
+                for (key in arguments[i]) {
+                    root[key] = arguments[i][key];
+                }
+            }
+            return root;
+        }
+        var merged = merge({name:'Batou'}, {city:'Niihama'})
         
         window.onload= function() {
+            assert(merged.name==='Batou', "name is intact")
+            assert(merged.city==='Niihama', "city is intact")
             assert(largest([3,2,5])==5, "located largest value");
             elements.gather("first");
             assert(elements.length == 1 && elements[0].nodeType, "verify that we have an element in our stash");
