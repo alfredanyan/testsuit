@@ -88,12 +88,12 @@
             return Math.min.apply(Math, array);
         }
         function largest(array) {
-            return Math.min.apply(Math, array);
+            return Math.max.apply(Math, array);
         }
 
         
         window.onload= function() {
-            
+            assert(largest([3,2,5])==5, "located largest value");
             elements.gather("first");
             assert(elements.length == 1 && elements[0].nodeType, "verify that we have an element in our stash");
             elements.gather("second");
