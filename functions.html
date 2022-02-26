@@ -121,8 +121,9 @@
                 if(fn.length == arguments.length)
                     return fn.apply(this, arguments)
                 else if (typeof old == 'function')
-                return old.apply(this, arguments);            
-        }
+                    return old.apply(this, arguments);            
+        };
+    }
         //possible use case
         // var newNinja = {}
         // addMethod(newNinja, 'whatever', function(){ /*do something */}) 
@@ -139,18 +140,28 @@
             var ret = [];
             for (var i = 0; i < this.values.length; i++)
                     if (this.values[i].indexOf(name)==0)
-                        ret.push(this.value[i]);
+                        ret.push(this.values[i]);
             return ret;
         });
         addMethod(topNinjas, "find", function(first, last){
-            var found = [];
+            var ret = [];
             for (var i = 0; i < this.values.length; i++)
                 if (this.values[i] == (first + " " + last))
-                    found.push(this.values[i]);
-            return found;
+                    ret.push(this.values[i]);
+            return ret;
         })
+
+        //checking if an object is a function and thus callable - 
+        //an alternative to: (typeof xy) === "function"
+        function isFunction(fn) {
+            return Object.prototype.toString.call(fn) === "[object Function]";
+        }
         
         window.onload= function() {
+            assert(topNinjas.find().length == 3, "found all top ninjas")
+            assert(topNinjas.find("Alfred").length == 1, "found Alfred amongst the top ninjas")
+            assert(topNinjas.find("Alfred", "Anyan"), "found alfred by firs and last name")
+            assert(topNinjas.find("Jacob", "Russel", "Jr") == null, "no jacob russel jr")
             assert(makeNinja.length == 2, "has 2 parameters")
             assert(multiMax(3,5,6,2)===18, "first arg by largest")
             assert(merged.name==='Batou', "name is intact")
