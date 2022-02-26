@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script>
-        class PopUpInfo extends HTMLElement {
+class PopUpInfo extends HTMLElement {
     constructor() {
         super();
 
@@ -67,37 +59,3 @@
 
 customElements.define('popup-info', PopUpInfo);
 
-
-    </script>
-    <style>
-        #block {
-            height: 400px;
-        }
-    </style>
-</head>
-<body>
-
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p id="block"></p>
-    <p></p>
-    <p></p>
-    Testing go 123...
-    <popup-info img="https://images.sitesearch360.com/file/frozenlink/34df6ab22cc717a4739507605c267c8e5057549f-300x200.jpg
-    " data-text="your card validation code (CSV) is an extra security feature"></popup-info>
-
-</body>
-</html>

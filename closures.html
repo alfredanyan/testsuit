@@ -65,10 +65,66 @@
           return this == myObject;
       }
 
-    
-
       
+      //memoization 2
+      Function.prototype.memoized = function(key) {
+          console.log("checking")
+          this._values = this._values || {}
+          console.log(this._values)
+          return this._values[key] !== undefined ? 
+          this._values[key] :
+          //computing, saving and returning value in single step
+          this._values[key] = this.apply(this, arguments);
+      }
+      //applying closure to avoid having to invoke memoized always
+      Function.prototype.memoize = function() {
+          var fn = this;
+          return function() {
+              //wrap original fn in memoized fn
+              return fn.memoized.apply( fn, arguments );
+          };
+      };
+
+      var isPrime = (function (num) {
+          var prime = num != 1;
+          for (var i = 2; i < num; i++) {
+              if (num % i == 0) {
+                  prime = false;
+                  break;
+              }
+          }
+          return prime;
+      }).memoize();
+
+
+      function wrap(object, method, wrapper) {
+          var fn = object[method];
+          return object[method] = function() {
+              return wrapper.apply(this, [fn.bind(this)].concat(
+                  Array.prototype.slice.call(arguments)
+              ))
+          }
+      }
+
+
+
+
       window.onload = function () {
+
+        if(Prototype.Browser.Opera) {
+            wrap(Element.Methods, "readAttribute",
+            function(original, elem, attr) {
+                return attr ==  "title" ?
+                elem.title : 
+                original(elem, attr);
+            });
+        }
+
+        //memoization 2
+        assert(isPrime.memoized(5), "The function works; 5 is prime.")
+        assert(isPrime._values[5], "The answer has been cached")
+
+
           //a more complex partial filling function - osteele.com
           Function.prototype.partial = function() {
               var fn = this, args = Array.prototype.slice.call(arguments);
@@ -93,13 +149,11 @@
               assert(true, "A call to this function will be delayed 10ms");
           });
 
-          //bindinng events
+          //binding events
           var bindClick = document.body.addEventListener.partial("click", undefined, false);
           bindClick(function() {
               assert(true, "click event bound via curried function")
           })
-
-
 
 
           //Curry functioin - filling in the first specified arguments
