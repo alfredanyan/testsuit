@@ -32,6 +32,7 @@
         };
       }
 
+      //closure from a callback for an ajax request
       function testUrl() {
         console.log("testing");
         var elem$ = $("#testSubject");
@@ -48,7 +49,127 @@
         });
       }
 
+      //function binding code used in prototype library
+      Function.prototype.bind = function() {
+          var fn = this, args = Array.prototype.slice.call(arguments),
+          object = args.shift();
+
+          return function() {
+              return fn.apply(object,
+              args.concat(Array.prototype.slice.call(arguments)));
+          };
+      };
+
+      var myObject = {}
+      function myFunction() {
+          return this == myObject;
+      }
+
+    
+
+      
       window.onload = function () {
+          //a more complex partial filling function - osteele.com
+          Function.prototype.partial = function() {
+              var fn = this, args = Array.prototype.slice.call(arguments);
+              return function() {
+                  var arg = 0;
+                  for (var i = 0; i < args.length && arg < arguments.length; i++) {
+                      console.log('looging args',arg[i])
+                      console.log('loggin arguments 1',arguments)
+
+                      if (args[i] === undefined) {
+                          args[i] = arguments[arg++];
+                          console.log('loggin arguments',arguments)
+                          console.log(args[i])
+                      }
+                  }
+                  return fn.apply(this, args);
+              }
+          }
+
+          var delay = setTimeout.partial(undefined, 10);
+          delay(function(){
+              assert(true, "A call to this function will be delayed 10ms");
+          });
+
+          //bindinng events
+          var bindClick = document.body.addEventListener.partial("click", undefined, false);
+          bindClick(function() {
+              assert(true, "click event bound via curried function")
+          })
+
+
+
+
+          //Curry functioin - filling in the first specified arguments
+          Function.prototype.curry = function() {
+              var fn = this,
+              args = Array.prototype.slice.call(arguments);
+              return function() {
+                  return fn.apply(this,args.concat(
+                      Array.prototype.slice.call(arguments)
+                  ))
+              }
+          }
+
+        //   //partially applying arguments to a native function
+        //   String.prototype.csv = String.prototype.split.partial(/,\s*/);
+        //   var results = ("Mugan, Jin, Fuu").csv();
+        //   assert(results[0]=="Mugan" &&
+        //   results[1]=="Jin" &&
+        //   results[2]=="Fuu",
+        //   "the text values were split properly")
+
+
+        //function binding code used in prototype library  
+        assert(!myFunction(), "context is not set yet");
+    
+          var aFunction = myFunction.bind(myObject)
+          assert(aFunction(), "context is set properly");
+
+
+      //closure from a callback for an ajax request
+
+          function bind(context, name) {
+              return function() {
+                  return context[name].apply(context, arguments);
+              };
+          }
+          var button = {
+              clicked: false,
+              click: function() {
+                  this.clicked = true;
+                  assert(button.clicked, "the button was clicked")
+                  console.log(this)
+              }
+          };
+          var elem = document.getElementById('test')
+        //   elem.addEventListener("click", button.click,false)
+        elem.addEventListener("click", bind(button, "click"),false)
+
+
+
+          //using closure in a timer interval callback
+          function animateIt(elementId) {
+              var elem = document.getElementById(elementId);
+              var tick = 0;
+    
+              var timer = setInterval(function(){
+                  if (tick < 100) {
+                      elem.style.left = elem.style.top = tick + "px";
+                      tick++;
+                  } else {
+                      clearInterval(timer);
+                      assert(tick == 100, "Tick accessed via closure")
+                      assert(elem, "element also accessed via closure")
+                      assert(timer, "timer reference also obtained via closure")
+                  }
+              }, 1000);
+          }
+          animateIt('box');
+
+
         var ninja = new Ninja();
         ninja.increaseFeint();
         assert(ninja.getFeint() == 1, "indirect access to feint count");
@@ -83,11 +204,20 @@
         color: red;
         text-decoration: line-through;
       }
+      #box {
+          width: 150px;
+          height: 100px;
+          background-color: #ccc;
+      }
     </style>
   </head>
   <body>
     <ul id="results"></ul>
+    <div class="my" id="box">ボックス</div>
     <div id="testSubject"></div>
+
     <button type="button" id="testButton" onclick="testUrl()">Go!</button>
+
+    <button type="button" id="test">Test!</button>
   </body>
 </html>
