@@ -102,23 +102,97 @@
           return object[method] = function() {
               return wrapper.apply(this, [fn.bind(this)].concat(
                   Array.prototype.slice.call(arguments)
-              ))
+              ));
           }
       }
 
+      //library wrapping
+      (function(){
+        var jQuery = window.jQuery = function(){
+          // initialize
+        }
+      })();
+
+      // option 2
+      var jQuery = (function() {
+        function jQuery() {
+          //initialize
+        }
+        return jQuery;
+      })();
 
 
 
+
+      // if(Prototype.Browser.Opera) {
+      //     wrap(Element.Methods, "readAttribute",
+      //     function(original, elem, attr) {
+      //         return attr ==  "title" ?
+      //         elem.title : 
+      //         original(elem, attr);
+      //     });
+      // }
       window.onload = function () {
 
-        if(Prototype.Browser.Opera) {
-            wrap(Element.Methods, "readAttribute",
-            function(original, elem, attr) {
-                return attr ==  "title" ?
-                elem.title : 
-                original(elem, attr);
-            });
-        }
+        //
+        var divs = document.getElementsByTagName('div')
+        for (var i = 0; i < divs.length; i++)
+        (function(n) {
+          divs[n].addEventListener('click', function() {
+            alert("Div #" + n + "clicked")
+          }, false)
+        })(i);
+
+
+        //using an immediate function to replace a long reference with a short name within a scope:
+        (function(v){
+          Object.extend(v, {
+            href: v._getAttr,
+            src: v._getAttr,
+            type: v._getAttr,
+            action: v._getAttrNode,
+            disabled: v._flag,
+            checked: v._flag,
+            readonly: v._flag,
+            multiple: v._flag,
+            onload: v._getEv,
+            onunload: v._getEv,
+            onclick: v._getEv
+
+          })
+
+        })(Element.attributeTranslations.read.values)
+
+        //enforcing the use of a name within an enclosed scope
+        // $ = function() {alert("not jQuery");}
+
+        // (function($){
+        //   $('img').on('click', function(event) {
+        //     $(event.target).addClass('clickedOn');
+        //   })
+        // })(jQuery);
+
+
+
+        //immediate function 1
+        // (function(){
+        //   var numClicks = 0;
+        //   document.addEventListener('click', function() {
+        //     alert(numClicks++);
+        //   }, false)
+        // })();
+
+        //immediate function version 2
+        document.addEventListener('click', (function(){
+          var numClicks = 0;
+          return function() {
+            alert(numClicks ++);
+          }
+        })(), false)
+
+
+
+
 
         //memoization 2
         assert(isPrime.memoized(5), "The function works; 5 is prime.")
@@ -273,5 +347,8 @@
     <button type="button" id="testButton" onclick="testUrl()">Go!</button>
 
     <button type="button" id="test">Test!</button>
+    <img src="https://www.meme-arsenal.com/memes/0e8a4b4067e7ff3e08b2596f5da7dc24.jpg" />
+    <div class="">DIV 1</div>
+    <div class="">DIV 2</div>
   </body>
 </html>
