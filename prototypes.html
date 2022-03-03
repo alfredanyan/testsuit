@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prototypes</title>
     <script>
+        function Person(){}
+        Person.prototype.dance = function(){}
         function Ninja(){
             this.swung = true;
             this.swingSword = function(){
@@ -15,7 +17,9 @@
         Ninja.prototype.swingSword= function() {
             return this.swung;
         }
-        
+
+        // Ninja.prototype = { dance: Person.prototype.dance }
+        // 
     </script>
 </head>
 <body>
