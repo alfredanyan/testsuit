@@ -6,9 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prototypes</title>
     <script>
-        function Ninja(){}
+        function Ninja(){
+            this.swung = true;
+            this.swingSword = function(){
+                return !this.swung;
+            }
+        }
         Ninja.prototype.swingSword= function() {
-            return true;
+            return this.swung;
         }
         
     </script>
