@@ -6,20 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prototypes</title>
     <script>
-        function Person(){}
-        Person.prototype.dance = function(){}
-        function Ninja(){
-            this.swung = true;
-            this.swingSword = function(){
-                return !this.swung;
+        function testInheritance() {
+            function Person(){}
+            Person.prototype.dance = function(){}
+            function Ninja(){
+                this.swung = true;
+                this.swingSword = function(){
+                    return !this.swung;
+                }
             }
-        }
-        Ninja.prototype.swingSword= function() {
-            return this.swung;
+            Ninja.prototype = new Person();
+    
+            Ninja.prototype.swingSword= function() {
+                return this.swung;
+            }
+    
+            var ninja = new Ninja();
         }
 
-        // Ninja.prototype = { dance: Person.prototype.dance }
-        // 
+        function implementForEach() {
+            if (!Array.prototype.forEach) {
+                Array.prototype.forEach = function(callback, context) {
+                    for (var i = 0; i < this.length; i++) {
+                        callback.call(context || null, this[i], i, this);
+                    }
+                };
+            }
+        ["a", "b", "c"].forEach(function(value, index, array) {
+            assert(value,
+            "Is in position " + index + " out of " + (array.length - 1) );
+        })
+        }
+
+
+        //Demo extending HTMLElement prototype
+        HTMLElement.prototype.removeMe = function(){
+            if (this.parentNode) {
+                this.parentNode.removeChild(this);
+            };
+            var a = document.getElementById("a")
+            a.parentNode.removeChild(a);
+
+            document.getElementById("b").removeMe();
+        }
+
     </script>
 </head>
 <body>
